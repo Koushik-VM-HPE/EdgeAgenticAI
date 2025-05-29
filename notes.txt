@@ -1,0 +1,51 @@
+#### steps in use wsl kubeconfig from windows
+
+run following command and use that ip (this is ip of wsl from windoes POV)
+ip addr show eth0 | grep 'inet '
+
+Modify the server: field in the kubeconfig:
+server: https://<WSL_IP>:6443
+
+command to check connectivity from powershell(windows)
+kubectl get po --kubeconfig="C:\Users\mandapak\Desktop\wslk3s.yaml" -A
+
+
+######################################
+results
+1. query: list all pods in the default namespace
+   ans:
+   {'agent': {'messages': [AIMessage(content='', additional_kwargs={}, response_metadata={'model': 'mistral-nemo:12b', 'created_at': '2025-05-28T18:41:25.2209523Z', 'done': True, 'done_reason': 'stop', 'total_duration': 24472661000, 'load_duration': 131776900, 'prompt_eval_count': 1118, 'prompt_eval_duration': 1920000000, 'eval_count': 24, 'eval_duration': 22358000000, 'model_name': 'mistral-nemo:12b'}, id='run--342e5f34-a95a-492b-bb8d-5751cdfba806-0', tool_calls=[{'name': 'list_pods_in_namespace', 'args': {'namespace': 'default'}, 'id': '262248e5-ecd7-4183-bd53-ee7ea6530a85', 'type': 'tool_call'}], usage_metadata={'input_tokens': 1118, 'output_tokens': 24, 'total_tokens': 1142})]}}
+{'tools': {'messages': [ToolMessage(content='[{"name": "infinite-pod-5b966645b4-ddb6c", "status": "Running", "ip": "10.42.0.21"}]', name='list_pods_in_namespace', id='c91e40f2-f8dc-44ce-9876-f0df9197a7ff', tool_call_id='262248e5-ecd7-4183-bd53-ee7ea6530a85')]}}
+{'agent': {'messages': [AIMessage(content='I have listed all the pods in the default namespace for you:\n\nPod Name: infinite-pod-5b966645b4-ddb6c\nStatus: Running\nIP Address: 10.42.0.21', additional_kwargs={}, response_metadata={'model': 'mistral-nemo:12b', 'created_at': '2025-05-28T18:42:46.1836786Z', 'done': True, 'done_reason': 'stop', 'total_duration': 80779610300, 'load_duration': 108193500, 'prompt_eval_count': 86, 'prompt_eval_duration': 38569000000, 'eval_count': 54, 'eval_duration': 42083000000, 'model_name': 'mistral-nemo:12b'}, id='run--4f65f3d6-5fde-4b64-9378-0ed81e715131-0', usage_metadata={'input_tokens': 86, 'output_tokens': 54, 'total_tokens': 140})]}}
+
+
+2. query: list all deployments in the default namespace
+   ans:
+   {'agent': {'messages': [AIMessage(content='', additional_kwargs={}, response_metadata={'model': 'mistral-nemo:12b', 'created_at': '2025-05-28T19:06:56.476634Z', 'done': True, 'done_reason': 'stop', 'total_duration': 539943919700, 'load_duration': 18656727300, 'prompt_eval_count': 1107, 'prompt_eval_duration': 498980000000, 'eval_count': 25, 'eval_duration': 21097000000, 'model_name': 'mistral-nemo:12b'}, id='run--670a5ea9-1e0f-43dc-8e6f-7b5075334a28-0', tool_calls=[{'name': 'list_deployments_in_namespace', 'args': {'namespace': 'default'}, 
+'id': 'c9da79a9-32f2-4681-8794-c49d55d63f04', 'type': 'tool_call'}], usage_metadata={'input_tokens': 1107, 'output_tokens': 25, 'total_tokens': 1132})]}}
+{'tools': {'messages': [ToolMessage(content='[{"name": "infinite-pod", "ready_replicas": 1, "total_replicas": 1, "available_replicas": 1, "up_to_date_replicas": 1, "image": ["busybox"], "age_minutes": 1536.2, "is_healthy": true}]', name='list_deployments_in_namespace', id='6a1ad165-e68b-4215-88dc-e8424e046e26', tool_call_id='c9da79a9-32f2-4681-8794-c49d55d63f04')]}}
+{'agent': {'messages': [AIMessage(content='Here are the deployments in the default namespace:\n\n- **Name:** infinite-pod\n  - Ready replicas: 1 (all pods are ready)\n  - Total replicas: 1 (there is one pod running)\n  - Available replicas: 1 (all pods are available)\n  - 
+Up-to-date replicas: 1 (all pods have been updated)\n  - Image(s): busybox\n  - Age: approximately 25 hours and 36 minutes\n  - Health status: healthy', additional_kwargs={}, response_metadata={'model': 'mistral-nemo:12b', 'created_at': '2025-05-28T19:09:18.977634Z', 'done': True, 'done_reason': 'stop', 'total_duration': 142290091300, 'load_duration': 89121400, 
+'prompt_eval_count': 118, 'prompt_eval_duration': 47262000000, 'eval_count': 104, 'eval_duration': 94923000000, 'model_name': 'mistral-nemo:12b'}, id='run--6cc95329-b2b2-4bfe-b5db-ce84776a1899-0', usage_metadata={'input_tokens': 118, 'output_tokens': 104, 'total_tokens': 222})]}}
+
+===== FINAL RESPONSE =====
+Here are the deployments in the default namespace:
+
+- **Name:** infinite-pod
+  - Ready replicas: 1 (all pods are ready)
+  - Total replicas: 1 (there is one pod running)
+  - Available replicas: 1 (all pods are available)
+  - Up-to-date replicas: 1 (all pods have been updated)
+  - Image(s): busybox
+  - Age: approximately 25 hours and 36 minutes
+  - Health status: healthy
+=========================
+
+3. query: check the status of 'infitite-pod' deployment in the 'default' namespace, please check the logs of the deployment to be sure that everything is runnign smoothly
+   ans: 
+   .... infinite pod!\\nHello from the infinite pod!\\nHello from the infinite pod!\\nHello from the infinite pod!\\nHello from the infinite pod!\\n"}, "deployment_name": "infinite-pod", "namespace": "default"}', name='get_deployment_logs', tool_call_id='1a8e4ada-cbeb-4b7c-ac6b-10597907221c')]}}
+   {'agent': {'messages': [AIMessage(content='The deployment \'infinite-pod\' in the \'default\' namespace is healthy and running smoothly. It has 1 ready, available, and up-to-date replicas. The logs show that the pod is consistently printing "Hello from the infinite pod!" every few seconds, indicating that it is functioning as expected.', additional_kwargs={}, response_metadata={'model': 'mistral-nemo:12b', 'created_at': '2025-05-28T20:11:01.9124862Z', 'done': True, 'done_reason': 'stop', 'total_duration': 559340906200, 'load_duration': 8663ens': 1192})]}}
+
+    ===== FINAL RESPONSE =====
+    The deployment 'infinite-pod' in the 'default' namespace is healthy and running smoothly. It has 1 ready, available, and up-to-date replicas. The logs show that the pod is consistently printing "Hello from the infinite pod!" every few seconds, indicating that it is functioning as expected.
+    =========================
